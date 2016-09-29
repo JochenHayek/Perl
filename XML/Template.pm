@@ -1,3 +1,7 @@
+# https://github.com/JochenHayek/Perl/blob/master/XML/Template.pm
+
+# this file is in the public domain.
+
 package XML::Template;
 
 $XML::Template::VERSION = '0.00';
