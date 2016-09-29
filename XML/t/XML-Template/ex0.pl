@@ -1,5 +1,9 @@
 #! /usr/bin/perl -w
 
+# https://github.com/JochenHayek/Perl/blob/master/XML/t/XML-Template/ex0.pl
+
+# this file is in the public domain.
+
 use lib '/Users/johayek/Computers/Programming/Languages/Perl';
 
 use XML::Template;
