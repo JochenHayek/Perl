@@ -148,6 +148,9 @@ sub output
 	    }
 	  elsif( m/ < TMPL_VAR \s+ (?<key>[^=]+) = (?<val>[^>]*) \/> /x)
 	    {
+	      die "!defined(\$self->{param}{$+{val}})"
+		  unless $self->{param}{$+{val}};
+
 	      s/    < TMPL_VAR \s+ (?<key>[^=]+) = (?<val>[^>]*) \/>  /$self->{param}{$+{val}}/gx;
 	      $return_value .= $_;
 	    }
