@@ -6,6 +6,8 @@ package XML::Template;
 
 $XML::Template::VERSION = '0.00';
 
+our($debug) = 0;
+
 sub new {
   my($package,$filename,$line,$proc_name) = caller(0);
   my $pkg = shift;
@@ -19,8 +21,8 @@ sub new {
     {
       printf STDERR "=%s,%d,%s: %s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
 	"\$param{$key}" => $val,
-	'…'
-	if 0;
+	'...'
+	if $debug;
 
       $self->{options}{$key} = $val;
     }
@@ -40,8 +42,8 @@ sub param
 
       printf STDERR "=%s,%d,%s: %s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
 	"\$param{$key}" => $val,
-	'…'
-	if 0;
+	'...'
+	if $debug;
     }
   return $return_value;
 }
@@ -55,8 +57,8 @@ sub output
 
   printf STDERR "=%s,%d,%s: %s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
     '$self->{options}{filename}' => $self->{options}{filename},
-    '…'
-    if 0;
+    '...'
+    if $debug;
 
   my($FH_IN) = IO::File->new();
   open($FH_IN,'<',$self->{options}{filename});
@@ -69,8 +71,8 @@ sub output
 	'$return_value' => $return_value,
 	'$loop_text' => $loop_text,
 	'$within_loop_p' => $within_loop_p,
-	'…'
-	if 0;
+	'...'
+        if $debug;
 
       if($within_loop_p)
 	{
@@ -83,13 +85,13 @@ sub output
 		'$loop_text' => $loop_text,
 		'$within_loop_p' => $within_loop_p,
 		'</TMPL_LOOP>'
-		if 0;
+                if $debug;
 
 	      # let's loop over the loop variable:
 	      printf STDERR "=%s,%d,%s: %s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
 		"\$self->{loop_param}{NAME}" => $self->{loop_param}{NAME},
-		'…'
-		if 0;
+		'...'
+                if $debug;
 
 	      my($loop_param_name) = $self->{loop_param}{NAME};
 
@@ -99,22 +101,22 @@ sub output
 
 		  printf STDERR "=%s,%d,%s: // %s\n",__FILE__,__LINE__,$proc_name,
 		    '=========='
-		    if 0;
+                    if $debug;
 
 		  while(my($key,$val) = each %{ $vset })
 		    {
 		      printf STDERR "=%s,%d,%s: %s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
 			$key => $val,
-			'…'
-			if 0;
+			'...'
+                        if $debug;
 
 		      $h =~ s/ < TMPL_VAR \s+ NAME = ${key} \/>  /${val}/gx;
 
 		      printf STDERR "=%s,%d,%s: %s=>{%s},%s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
 			$key => $val,
 			'$h' => $h,
-			'…'
-			if 0;
+			'...'
+			if $debug;
 		    }
 
 		  $return_value .= $h;
@@ -137,21 +139,21 @@ sub output
 		'$loop_text' => $loop_text,
 		'$within_loop_p' => $within_loop_p,
 		'<TMPL_LOOP …>'
-		if 0;
+		if $debug;
 
 	      $self->{loop_param}{ $+{key} } = $+{val};
 
 	      printf STDERR "=%s,%d,%s: %s=>{%s} // %s\n",__FILE__,__LINE__,$proc_name,
 		"\$self->{loop_param}{$+{key}}" => $+{val},
-		'…'
-		if 0;
+		'...'
+		if $debug;
 	    }
 	  elsif( m/ < TMPL_VAR \s+ (?<key>[^=]+) = (?<val>[^>]*) \/> /x)
 	    {
-	      die "!defined(\$self->{param}{$+{val}})"
-		  unless $self->{param}{$+{val}};
+	      if(defined($self->{param}{$+{val}})){
+		s/    < TMPL_VAR \s+ (?<key>[^=]+) = (?<val>[^>]*) \/>  /$self->{param}{$+{val}}/gx;
+	      }
 
-	      s/    < TMPL_VAR \s+ (?<key>[^=]+) = (?<val>[^>]*) \/>  /$self->{param}{$+{val}}/gx;
 	      $return_value .= $_;
 	    }
 	  else
