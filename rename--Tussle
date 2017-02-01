@@ -3,6 +3,9 @@
 # original rename and relink were by Larry Wall
 # this version by Tom Christiansen
 
+# https://metacpan.org/pod/Unicode::Tussle - Tom's Unicode Scripts So Life is Easier
+# https://api.metacpan.org/source/BDFOY/Unicode-Tussle-1.08/script/rename
+
 use strict;
 use warnings;
 
